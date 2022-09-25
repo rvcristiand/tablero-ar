@@ -1,0 +1,154 @@
+html {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+	margin: 0;
+	background-color: #bbb;
+	color: #fff;
+	font-family: Monospace;
+	font-size: 13px;
+	line-height: 24px;
+	overscroll-behavior: none;
+}
+
+#wrapper {
+    /* display: flex; */
+    width: 100%;
+    height: 100%;
+}
+
+a {
+	color: #ff0;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+Button {
+	cursor: pointer;
+	text-transform: uppercase;
+}
+
+.navbar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+	position: absolute;
+	top: 0px;
+	width: 146px;
+	height: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	background-color: rgba(170, 170, 170, 0.8);
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	z-index: 999; /* TODO Solve this in HTML */
+}
+
+/* .navbar .brand { */
+/*     display: flex; */
+/*     /\* height: 146px; *\/ */
+/*     /\* width: fit-content; *\/ */
+/* } */
+
+.navbar .logo {
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: 5px;
+}
+
+.logo img {
+    max-width: 100%;
+}
+
+.navbar .buttons {
+    display: flex;
+    justify-content: center;
+    /* position: absolute; */
+    width: 100%;
+}
+
+/* .brand a { */
+/*     display: inline-block; */
+/* } */
+
+/* .brand .logos { */
+/*     display: flex; */
+/*     flex-direction: column; */
+/*     position: relative; */
+/*     height: 100%;     */
+/*     /\* max-height: 56px; *\/ */
+/* } */
+
+.brand span {
+    padding: 5px 10px;
+    position: absolute;
+    top: 50%;
+/*     left: 0; */
+/*     -webkit-transform: translate(0, -50%); */
+    transform: translate(0, -50%);
+}
+
+
+a, button, input, select {
+	pointer-events: auto;
+}
+
+.lil-gui {
+	z-index: 2 !important; /* TODO Solve this in HTML */
+}
+
+@media all and ( max-width: 640px ) {
+	.lil-gui.root {
+		right: auto;
+		top: auto;
+		max-height: 50%;
+		max-width: 80%;
+		bottom: 0;
+		left: 0;
+	}
+}
+
+#overlay {
+	position: absolute;
+	font-size: 16px;
+	z-index: 2;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	background: rgba(0,0,0,0.7);
+}
+
+	#overlay button {
+		background: transparent;
+		border: 0;
+		border: 1px solid rgb(255, 255, 255);
+		border-radius: 4px;
+		color: #ffffff;
+		padding: 12px 18px;
+		text-transform: uppercase;
+		cursor: pointer;
+	}
+
+#notSupported {
+	width: 50%;
+	margin: auto;
+	background-color: #f00;
+	margin-top: 20px;
+	padding: 10px;
+}

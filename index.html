@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>CIAID ar - tablero</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<link type="text/css" rel="stylesheet" href="main.css">
+	</head>
+	<body>
+	  <div id="wrapper">
+	    <div id="navbar" class="navbar">
+	      <a class="logo" href="https://www.ciaid.co/">
+		<img src="./images/ciaid.png" alt="ciaid">
+	      </a>
+	      <div id="buttons" class="buttons"></div>
+	    </div>
+	  </div>
+
+
+		<!-- 	<a href="" target="_blank" rel="noopener">CIAID</a> caldera<br/> -->
+		<!-- </div> -->
+
+		<!-- Import maps polyfill -->
+		<!-- Remove this when import maps will be widely supported -->
+		<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+
+		<script type="importmap">
+		  {
+		      "imports": {
+			  "three" : "https://unpkg.com/three@0.143.0/build/three.module.js",
+			  "ARButton": "./examples/jsm/webxr/ARButton.js",
+			  "GLTFLoader": "https://unpkg.com/three@0.143.0/examples/jsm/loaders/GLTFLoader.js",
+			  "DRACOLoader": "https://unpkg.com/three@0.143.0/examples/jsm/loaders/DRACOLoader.js"
+		      }
+		  }
+		</script>
+
+		<script type="text/javascript" src="./build/dat.gui.min.js"></script>
+		<!-- <script type="module" src='./modules/main.js'></script> -->
+
+		<script type="module">
+		  import * as THREE from 'three';
+		  import { ARButton } from 'ARButton';
+		  import { GLTFLoader } from 'GLTFLoader';
+		  import { DRACOLoader } from 'DRACOLoader';
+		  // import * as dat from 'dat.gui';
+		  // import { main } from './modules/main.js';
+
+			let camera, scene, renderer;
+			let controller;
+
+		  var config = {
+		      'scale': 0.1,
+		  };
+
+		  var set;
+
+			init();
+			animate();
+		  
+			function init() {
+			    const div_wrapper = document.getElementById( 'wrapper' );
+				const container = document.createElement( 'div' );
+			    div_wrapper.appendChild( container );
+
+				scene = new THREE.Scene();
+
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
+
+				const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 1 );
+				light.position.set( 0.5, 1, 0.25 );
+				scene.add( light );
+
+			    // const ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
+			    // scene.add( ambientLight );
+
+			    // const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+			    // scene.add( directionalLight );
+
+			    // model
+			    // scene
+			    // -set
+			    // --tablero
+			    set = new THREE.Group( );
+			    set.name = "set";
+			    set.rotateY( -Math.PI /2 );
+			    set.position.setZ( -0.3 );
+			    set.position.setX( -0.2 );
+			    set.position.setY( -0.1 );
+			    const scale = config[ 'scale' ];
+			    set.scale.set( scale, scale, scale );
+			    scene.add( set );
+
+			    // fire
+			    addGLTFModel( 'tablero.glb', set );
+
+				//
+
+				renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } ); //
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.xr.enabled = true;
+
+				container.appendChild( renderer.domElement );
+
+				//
+
+			    const div_navbar = document.getElementById( "buttons" );
+			    var ar_button = ARButton.createButton( renderer, {
+                                optionalFeatures: ['dom-overlay', 'dom-overlay-for-handheld-ar'],
+                                domOverlay: {root: document.body}
+			    } );
+			    ar_button.style.position = 'static';
+			    div_navbar.appendChild( ar_button );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize );
+
+
+			    setupGUI();
+			}
+
+		  function addGLTFModel( file, scene ) {
+		      /*
+			Add GLTF model to scene
+		      */
+
+		      const gltfLoader = new GLTFLoader();
+
+		      const dracoLoader = new DRACOLoader();
+		      dracoLoader.setDecoderPath( './examples/js/libs/draco/' );
+		      gltfLoader.setDRACOLoader( dracoLoader );
+
+		      gltfLoader.load( './models/' + file, function ( gltf ) {
+			  const model = gltf.scene;
+			  model.name = file;
+
+			  model.traverse( child => {
+			      if ( child.material ) {
+				  child.material.metalness = 0;
+			      }
+			  } );
+
+			  scene.add( model );
+
+			  render();
+		      } );
+
+		  }
+
+		  function setupGUI() {
+		      const gui = new dat.GUI();
+		      var h;
+
+		      // scale
+		      gui.add( config, 'scale' ).name( 'scale' ).min( 0.001 ).max( 0.1 ).step( 0.001 ).onChange( scale => {
+			  set.scale.set( scale, scale, scale );
+		      } );
+
+		  }
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function animate() {
+
+				renderer.setAnimationLoop( render );
+
+			}
+
+			function render() {
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+	</body>
+</html>
